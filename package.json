@@ -1,0 +1,434 @@
+{
+  "name": "hosts-manager-vscode",
+  "displayName": "Hosts Manager",
+  "description": "Manage /etc/hosts entries with shell access and quick toggle functionality",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "Snippets"
+  ],
+  "keywords": [
+    "hosts",
+    "networking",
+    "development",
+    "shell",
+    "admin"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "hosts-manager.enableHost",
+        "title": "Enable Host",
+        "category": "Hosts Manager",
+        "icon": "$(pass)"
+      },
+      {
+        "command": "hosts-manager.disableHost",
+        "title": "Disable Host",
+        "category": "Hosts Manager",
+        "icon": "$(circle-slash)"
+      },
+      {
+        "command": "hosts-manager.restoreHosts",
+        "title": "Restore Hosts File",
+        "category": "Hosts Manager",
+        "icon": "$(history)"
+      },
+      {
+        "command": "hosts-manager.refreshHosts",
+        "title": "Refresh Hosts",
+        "category": "Hosts Manager",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "hosts-manager.backupHosts",
+        "title": "Backup Hosts File",
+        "category": "Hosts Manager",
+        "icon": "$(save)"
+      },
+      {
+        "command": "hosts-manager.openHostsPanel",
+        "title": "Open Hosts Panel",
+        "category": "Hosts Manager",
+        "icon": "$(window)"
+      },
+      {
+        "command": "hosts-manager.refreshBackups",
+        "title": "Refresh Backups",
+        "category": "Hosts Manager",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "hosts-manager.openHostsFile",
+        "title": "Open Hosts File",
+        "category": "Hosts Manager",
+        "icon": "$(file)"
+      },
+      {
+        "command": "hosts-manager.toggleHostEntry",
+        "title": "Toggle Host Entry",
+        "category": "Hosts Manager",
+        "icon": "$(circle-slash)"
+      },
+      {
+        "command": "hosts-manager.addHostEntry",
+        "title": "Add Host Entry",
+        "category": "Hosts Manager",
+        "icon": "$(add)"
+      },
+      {
+        "command": "hosts-manager.showHostsPanel",
+        "title": "Show Hosts Panel",
+        "category": "Hosts Manager",
+        "configuration": [
+          {
+            "title": "Hosts Manager: General",
+            "properties": {
+              "hostsManager.shell": {
+                "type": "string",
+                "default": "zsh",
+                "description": "Preferred shell for executing commands",
+                "order": 1,
+                "enum": [
+                  "bash",
+                  "zsh",
+                  "fish",
+                  "sh"
+                ]
+              },
+              "hostsManager.autoBackup": {
+                "type": "boolean",
+                "default": true,
+                "description": "Automatically backup hosts file before making changes",
+                "order": 2
+              }
+            }
+          },
+          {
+            "title": "Hosts Manager: Backup",
+            "properties": {
+              "hostsManager.backupLocation": {
+                "type": "string",
+                "default": "default",
+                "enum": [
+                  "default",
+                  "~/Documents/HostsBackups",
+                  "~/Library/Application Support/hosts-manager/backups"
+                ],
+                "enumDescriptions": [
+                  "Extension directory (default)",
+                  "User's Documents folder",
+                  "User's Application Support folder"
+                ],
+                "description": "Backup location for hosts files.",
+                "order": 1,
+                "scope": "window"
+              },
+              "hostsManager.maxBackups": {
+                "type": "number",
+                "default": 10,
+                "minimum": 1,
+                "maximum": 100,
+                "description": "Maximum number of backup files to keep (older backups will be automatically cleaned up)",
+                "order": 2
+              }
+            }
+          }
+        ],
+        "icon": "$(x)"
+      },
+      {
+        "command": "hosts-manager.editHost",
+        "title": "Edit Host",
+        "category": "Hosts Manager",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "hosts-manager.deleteHost",
+        "title": "Delete Host",
+        "category": "Hosts Manager",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "hosts-manager.flushDns",
+        "title": "Flush DNS Cache",
+        "category": "Hosts Manager",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "hosts-manager.deleteBackup",
+        "title": "Delete Backup",
+        "category": "Hosts Manager",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "hosts-manager.cleanupAllBackups",
+        "title": "Cleanup All Backups",
+        "category": "Hosts Manager",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "hosts-manager.openBackupFolder",
+        "title": "Open Backup Folder",
+        "category": "Hosts Manager",
+        "icon": "$(folder)"
+      },
+      {
+        "command": "hosts-manager.openSettings",
+        "title": "Open Settings",
+        "category": "Hosts Manager",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "hosts-manager.browseBackupLocation",
+        "title": "Browse Backup Location",
+        "category": "Hosts Manager",
+        "icon": "$(folder-opened)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "hostsManager",
+          "title": "Hosts Manager",
+          "icon": "$(key)"
+        }
+      ]
+    },
+    "views": {
+      "hostsManager": [
+        {
+          "icon": "$(key)",
+          "id": "hostsManagerMain",
+          "name": "Host Entries",
+          "when": "true"
+        },
+        {
+          "icon": "$(history)",
+          "id": "hostsManagerBackups",
+          "name": "Backups",
+          "when": "true"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "hostsManagerMain",
+        "contents": "No host entries found in your hosts file.\n\n[Add Host Entry](command:hosts-manager.addHostEntry)\n\n[Open Hosts File](command:hosts-manager.openHostsFile)"
+      },
+      {
+        "view": "hostsManagerBackups",
+        "contents": "No backups available yet.\n\n[Create Backup](command:hosts-manager.backupHosts)\n\n[Browse Current Location](command:hosts-manager.browseBackupLocation)\n\n[Clear All Backup Paths](command:hosts-manager.clearAllPaths)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "hosts-manager.enableHost"
+        },
+        {
+          "command": "hosts-manager.disableHost"
+        },
+        {
+          "command": "hosts-manager.openHostsFile"
+        },
+        {
+          "command": "hosts-manager.toggleHostEntry"
+        },
+        {
+          "command": "hosts-manager.addHostEntry"
+        },
+        {
+          "command": "hosts-manager.showHostsPanel"
+        },
+        {
+          "command": "hosts-manager.backupHosts"
+        },
+        {
+          "command": "hosts-manager.restoreHosts"
+        },
+        {
+          "command": "hosts-manager.openHostsPanel"
+        },
+        {
+          "command": "hosts-manager.openSettings"
+        },
+        {
+          "command": "hosts-manager.browseBackupLocation"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "hosts-manager.addHostEntry",
+          "when": "view == hostsManagerMain",
+          "group": "navigation"
+        },
+        {
+          "command": "hosts-manager.refreshHosts",
+          "when": "view == hostsManagerMain",
+          "group": "navigation"
+        },
+        {
+          "command": "hosts-manager.backupHosts",
+          "when": "view == hostsManagerMain",
+          "group": "navigation"
+        },
+        {
+          "command": "hosts-manager.openHostsPanel",
+          "when": "view == hostsManagerMain",
+          "group": "navigation"
+        },
+        {
+          "command": "hosts-manager.flushDns",
+          "when": "view == hostsManagerMain",
+          "group": "navigation"
+        },
+        {
+          "command": "hosts-manager.refreshBackups",
+          "when": "view == hostsManagerBackups",
+          "group": "navigation"
+        },
+        {
+          "command": "hosts-manager.cleanupAllBackups",
+          "when": "view == hostsManagerBackups",
+          "group": "navigation"
+        },
+        {
+          "command": "hosts-manager.openSettings",
+          "when": "view == hostsManagerBackups",
+          "group": "navigation"
+        },
+        {
+          "command": "hosts-manager.browseBackupLocation",
+          "when": "view == hostsManagerBackups",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "hosts-manager.enableHost",
+          "when": "view == hostsManagerMain && viewItem == disabledHost",
+          "group": "navigation"
+        },
+        {
+          "command": "hosts-manager.disableHost",
+          "when": "view == hostsManagerMain && viewItem == enabledHost",
+          "group": "navigation"
+        },
+        {
+          "command": "hosts-manager.editHost",
+          "when": "view == hostsManagerMain",
+          "group": "edit@1"
+        },
+        {
+          "command": "hosts-manager.deleteHost",
+          "when": "view == hostsManagerMain",
+          "group": "edit@2"
+        },
+        {
+          "command": "hosts-manager.openHostsFile",
+          "when": "view == hostsManagerMain",
+          "group": "file@1"
+        },
+        {
+          "command": "hosts-manager.deleteBackup",
+          "when": "view == hostsManagerBackups && viewItem == backupItem",
+          "group": "inline@1"
+        },
+        {
+          "command": "hosts-manager.deleteBackup",
+          "when": "view == hostsManagerBackups && viewItem == backupItem",
+          "group": "edit@1"
+        }
+      ]
+    },
+    "configuration": [
+      {
+        "title": "General",
+        "properties": {
+          "hostsManager.shell": {
+            "type": "string",
+            "default": "zsh",
+            "description": "Preferred shell for executing commands",
+            "order": 1,
+            "enum": [
+              "bash",
+              "zsh",
+              "fish",
+              "sh"
+            ]
+          },
+          "hostsManager.currentBackupPath": {
+            "type": "string",
+            "default": "",
+            "description": "Current backup path for hosts file (managed by extension)",
+            "order": 2,
+            "scope": "window"
+          }
+        }
+      },
+      {
+        "title": "Backup",
+        "properties": {
+          "hostsManager.autoBackup": {
+            "type": "boolean",
+            "default": true,
+            "description": "Automatically backup hosts file before making changes",
+            "order": 1
+          },
+          "hostsManager.backupLocation": {
+            "type": "string",
+            "default": "default",
+            "enum": [
+              "default",
+              "~/Documents/HostsBackups",
+              "~/Library/Application Support/hosts-manager/backups"
+            ],
+            "enumDescriptions": [
+              "Extension directory (default)",
+              "User's Documents folder",
+              "User's Application Support folder"
+            ],
+            "description": "Backup location for hosts files.",
+            "order": 2,
+            "scope": "window"
+          },
+          "hostsManager.maxBackups": {
+            "type": "number",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Maximum number of backup files to keep (older backups will be automatically cleaned up)",
+            "order": 3
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.4",
+    "@vscode/test-electron": "^2.2.0",
+    "@vscode/vsce": "^2.15.0"
+  }
+}

@@ -1,0 +1,8 @@
+.vscode-test
+out
+node_modules
+*.vsix
+.DS_Store
+.vscode/settings.json
+temp_hosts
+backups/
