@@ -421,17 +421,18 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js",
+    "test": "vitest",
     "package": "vsce package"
   },
   "devDependencies": {
+    "@types/node": "^20.0.0",
     "@types/vscode": "^1.74.0",
-    "@types/node": "16.x",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
+    "@vscode/test-electron": "^2.2.0",
+    "@vscode/vsce": "^2.15.0",
     "eslint": "^8.28.0",
     "typescript": "^4.9.4",
-    "@vscode/test-electron": "^2.2.0",
-    "@vscode/vsce": "^2.15.0"
+    "vitest": "^3.2.4"
   }
 }
