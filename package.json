@@ -1,8 +1,10 @@
 {
-  "name": "hosts-manager-vscode",
+  "name": "hosts-manager",
   "displayName": "Hosts Manager",
   "description": "Manage /etc/hosts entries with shell access and quick toggle functionality",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "repository": "https://github.com/Irandoust/hosts-manager",
+  "publisher": "irandoust",
   "engines": {
     "vscode": "^1.74.0"
   },
